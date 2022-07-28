@@ -1,0 +1,27 @@
+services:
+  database:
+    container_name: blog_database
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    volumes:
+      - database:/var/lib/mysql
+    env_file:
+      - ./.env
+    ports:
+      - ${MYSQL_PUBLIC_PORT}:3306
+    restart: always
+  blog_api:
+    container_name: blog_graphql_api
+    build:
+      context: ./blog_api
+      dockerfile: Dockerfile
+    ports:
+      - ${BLOG_API_PUBLIC_PORT}:4000
+    env_file:
+      - ./.env
+    restart: always
+    depends_on:
+      - database
+volumes:
+  database: {}
